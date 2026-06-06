@@ -1,6 +1,7 @@
 package main
 
 import (
+	"detrox/internal/user"
 	"fmt"
 	"net/http"
 
@@ -47,29 +48,16 @@ func main() {
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.Use(middleware.RequestLogger())
 
+	userRepo := user.NewRepository(db)
+	userService := user.NewService(userRepo)
+	userHandler := user.NewHandler(userService)
+
+	e.POST("/signup", userHandler.CreateUser)
+
 	e.GET("/", func(c *echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
-	e.POST("/signup", func(c *echo.Context) error {
-		newUser := new(User)
-		if err := c.Bind(newUser); err != nil {
-			return c.String(400, "Invalid data")
-		}
-		if err := c.Validate(newUser); err != nil {
-			return c.JSON(400, map[string]any{
-				"error": err.Error(),
-			})
-		}
-		result := db.Create(newUser)
-		if result.Error != nil {
-			return c.JSON(500, map[string]any{
-				"error": result.Error.Error(),
-			})
-		}
 
-		return c.JSON(201, newUser)
-
-	})
 	fmt.Println("Server running on http://localhost:8080")
 	if err := e.Start(":8080"); err != nil {
 		e.Logger.Error("failed to start server", "error", err)

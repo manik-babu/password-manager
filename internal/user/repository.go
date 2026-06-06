@@ -6,24 +6,23 @@ import (
 	"gorm.io/gorm"
 )
 
-type Repository interface {
-	CreateUser(user *User) error
-}
-
 type repository struct {
 	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) Repository {
+func NewRepository(db *gorm.DB) *repository {
 	return &repository{
 		db: db,
 	}
 }
 
-func (repo repository) CreateUser(user *User) error {
+func (repo *repository) CreateUser(user *User) error {
 	result := repo.db.Create(user)
-	if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
-		return errors.New("User with this email is already exists")
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
+			return errors.New("User with this email is already exists")
+		}
+		return result.Error
 	}
 	return nil
 }
