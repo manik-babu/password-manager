@@ -1,6 +1,7 @@
 package main
 
 import (
+	"detrox/internal/config"
 	"detrox/internal/user"
 	"fmt"
 	"net/http"
@@ -32,8 +33,10 @@ type User struct {
 }
 
 func main() {
+	env := config.LoadEnv()
 	// Database connection
-	dsn := "host=localhost user=manik password=14062021 dbname=pwd-manager port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	dsn := env.Dsn
+	// dsn := "host=localhost user=manik password=14062021 dbname=pwd-manager port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		TranslateError: true,
 	})
