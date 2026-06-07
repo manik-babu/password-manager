@@ -54,3 +54,37 @@ func (h *handler) CreateUser(c *echo.Context) error {
 	})
 
 }
+
+func (h *handler) LoginUser(c *echo.Context) error {
+	var req dto.LoginUserRequest
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(400, httpresponse.Error{
+			Ok:      false,
+			Message: "Invalid data",
+			Details: err.Error(),
+		})
+	}
+
+	if err := c.Validate(req); err != nil {
+		return c.JSON(400, httpresponse.Error{
+			Ok:      false,
+			Message: "Invalid data",
+			Details: err.Error(),
+		})
+	}
+	res, err := h.service.LoginUser(req)
+	if err != nil {
+		return c.JSON(500, httpresponse.Error{
+			Ok:      false,
+			Code:    500,
+			Message: err.Error(),
+			Details: err.Error(),
+		})
+	}
+	return c.JSON(200, httpresponse.Success{
+		Ok:      true,
+		Message: "Login successful",
+		Data:    res,
+	})
+}

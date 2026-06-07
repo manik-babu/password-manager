@@ -26,3 +26,16 @@ func (repo *repository) CreateUser(user *User) error {
 	}
 	return nil
 }
+func (repo *repository) GetUserByEmail(email string) (*User, error) {
+	var user User
+	result := repo.db.Where(&User{
+		Email: email,
+	}).First(&user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+	return &user, nil
+}
