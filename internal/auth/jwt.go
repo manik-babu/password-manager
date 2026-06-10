@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	JwtSecretKey         = "sldneixowmbgi"
+	JwtSecretKey         = "h82bslk6hvGHs78mwWof7"
 	defaultTokenDuration = 24 * time.Hour
 )
 
@@ -54,3 +54,7 @@ func (s *jwtService) GenerateToken(id uint, email string) (string, error) {
 	}
 	return tokenStr, nil
 }
+
+// func (s * jwtService) ValidateToken(token string) (*JWTClaims, error){
+
+// }

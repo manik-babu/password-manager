@@ -32,10 +32,10 @@ type User struct {
 }
 
 func main() {
-	env := config.LoadEnv()
+	Env := config.LoadEnv()
 
 	// Database connection
-	db := config.ConnectToDatabase(env)
+	db := config.ConnectToDatabase(Env)
 
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
@@ -48,7 +48,7 @@ func main() {
 	})
 
 	fmt.Println("Server running on http://localhost:8080")
-	if err := e.Start(":" + env.Port); err != nil {
+	if err := e.Start(":" + Env.Port); err != nil {
 		e.Logger.Error("failed to start server", "error", err)
 	}
 }

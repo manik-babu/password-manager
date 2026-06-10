@@ -8,8 +8,9 @@ import (
 )
 
 type Env struct {
-	Port string
-	Dsn  string
+	Port      string
+	Dsn       string
+	JwtSecret string
 }
 
 func LoadEnv() *Env {
@@ -19,7 +20,8 @@ func LoadEnv() *Env {
 		log.Fatal("Error to load ENV")
 	}
 	return &Env{
-		Port: os.Getenv("PORT"),
-		Dsn:  os.Getenv("DSN"),
+		Port:      os.Getenv("PORT"),
+		Dsn:       os.Getenv("DSN"),
+		JwtSecret: os.Getenv("JWT_SECRET"),
 	}
 }
