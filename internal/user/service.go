@@ -1,17 +1,21 @@
 package user
 
 import (
+	"detrox/internal/auth"
 	"detrox/internal/user/dto"
 	"errors"
+	"fmt"
 )
 
 type service struct {
-	repo *repository
+	repo       *repository
+	jwtService auth.JWTService
 }
 
-func NewService(repo *repository) *service {
+func NewService(repo *repository, jwtService auth.JWTService) *service {
 	return &service{
-		repo: repo,
+		repo:       repo,
+		jwtService: jwtService,
 	}
 }
 
@@ -50,11 +54,16 @@ func (s *service) LoginUser(req dto.LoginUserRequest) (*dto.Response, error) {
 	if checkPasswordError != nil {
 		return nil, errors.New("Email or password is incorrect")
 	}
+	token, jwtErr := s.jwtService.GenerateToken(user.ID, user.Email)
+	if jwtErr != nil {
+		fmt.Println(jwtErr)
+		return nil, jwtErr
+	}
 	response := dto.Response{
 		Id:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
+		Token: token,
 	}
 	return &response, nil
-
 }

@@ -1,13 +1,16 @@
 package user
 
 import (
+	"detrox/internal/auth"
+
 	"github.com/labstack/echo/v5"
 	"gorm.io/gorm"
 )
 
 func RegisterRoutes(e *echo.Echo, db *gorm.DB) {
 	repo := NewRepository(db)
-	service := NewService(repo)
+	jwtService := auth.NewJWTService("jemnsokfgebi3492bd402b")
+	service := NewService(repo, jwtService)
 	handler := NewHandler(service)
 
 	api := e.Group("/api/v1")

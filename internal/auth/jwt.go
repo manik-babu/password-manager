@@ -28,7 +28,9 @@ type jwtService struct {
 }
 
 func NewJWTService(secretKey string) JWTService {
-
+	if secretKey == "" {
+		secretKey = JwtSecretKey
+	}
 	return &jwtService{
 		secretKey:     secretKey,
 		tokenDuration: defaultTokenDuration,
@@ -44,7 +46,7 @@ func (s *jwtService) GenerateToken(id uint, email string) (string, error) {
 			Issuer:    "pwd-manager",
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenStr, err := token.SignedString([]byte(s.secretKey))
 
 	if err != nil {
