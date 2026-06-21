@@ -10,7 +10,7 @@ import (
 
 func RegisterRoutes(e *echo.Echo, db *gorm.DB) {
 	repo := NewRepository(db)
-	jwtService := auth.NewJWTService("jemnsokfgebi3492bd402b")
+	jwtService := auth.NewJWTService("") // Uses default JwtSecretKey
 	service := NewService(repo, jwtService)
 	handler := NewHandler(service)
 
