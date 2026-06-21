@@ -1,6 +1,7 @@
 package user
 
 import (
+	"detrox/internal/auth"
 	"detrox/internal/httpresponse"
 	"detrox/internal/user/dto"
 
@@ -86,5 +87,20 @@ func (h *handler) LoginUser(c *echo.Context) error {
 		Ok:      true,
 		Message: "Login successful",
 		Data:    res,
+	})
+}
+func (h *handler) GetMe(c *echo.Context) error {
+	user, ok := c.Get("user").(auth.JWTClaims)
+	if !ok {
+		return c.JSON(401, httpresponse.Error{
+			Ok:      false,
+			Code:    401,
+			Message: "Can not get user info",
+		})
+	}
+	return c.JSON(200, httpresponse.Success{
+		Ok:      true,
+		Message: "User retrieved successfully",
+		Data:    user,
 	})
 }

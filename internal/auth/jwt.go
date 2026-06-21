@@ -63,7 +63,7 @@ func (s *jwtService) ValidateToken(tokenStr string) (*JWTClaims, error) {
 		return []byte(s.secretKey), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Invalid singing method: %v", token.Header["alg"])
+		return nil, fmt.Errorf("Error to parse the token: %v", err)
 	}
 	if claims, ok := token.Claims.(*JWTClaims); ok && token.Valid {
 		return claims, nil

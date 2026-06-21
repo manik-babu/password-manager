@@ -3,6 +3,7 @@ package middleware
 import (
 	"detrox/internal/auth"
 	"detrox/internal/httpresponse"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -13,6 +14,7 @@ func AuthMiddleWare(jwtService auth.JWTService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
 			authHeader := c.Request().Header.Get("Authorization")
+			fmt.Println(authHeader)
 			if authHeader == "" {
 				return c.JSON(http.StatusUnauthorized, httpresponse.Error{
 					Ok:      false,
@@ -21,7 +23,7 @@ func AuthMiddleWare(jwtService auth.JWTService) echo.MiddlewareFunc {
 				})
 			}
 			parts := strings.Split(authHeader, " ")
-			if len(parts) != 2 || parts[0] != "bearer" {
+			if len(parts) != 2 || parts[0] != "Bearer" {
 				return c.JSON(401, httpresponse.Error{
 					Ok:      false,
 					Code:    401,
@@ -29,6 +31,7 @@ func AuthMiddleWare(jwtService auth.JWTService) echo.MiddlewareFunc {
 				})
 			}
 			tokenStr := parts[1]
+			fmt.Println("Token: ", tokenStr)
 			claims, err := jwtService.ValidateToken(tokenStr)
 
 			if err != nil {
