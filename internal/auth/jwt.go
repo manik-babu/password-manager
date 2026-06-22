@@ -56,7 +56,7 @@ func (s *jwtService) GenerateToken(id uint, email string) (string, error) {
 	return tokenStr, nil
 }
 func (s *jwtService) ValidateToken(tokenStr string) (*JWTClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenStr, JWTClaims{}, func(token *jwt.Token) (any, error) {
+	token, err := jwt.ParseWithClaims(tokenStr, &JWTClaims{}, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Invalid singing method: %v", token.Header["alg"])
 		}

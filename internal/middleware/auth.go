@@ -14,7 +14,6 @@ func AuthMiddleWare(jwtService auth.JWTService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
 			authHeader := c.Request().Header.Get("Authorization")
-			fmt.Println(authHeader)
 			if authHeader == "" {
 				return c.JSON(http.StatusUnauthorized, httpresponse.Error{
 					Ok:      false,
